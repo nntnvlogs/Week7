@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  wordpress:
+    image: wordpress:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - mysql
+    networks:
+      - wordpress_network
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_NAME: example_db
+      WORDPRESS_DB_USER: example_user
+      WORDPRESS_DB_PASSWORD: example_password
+    volumes:
+      - wordpress_data:/var/www/html
+
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    networks:
+      - wordpress_network
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: example_db
+      MYSQL_USER: example_user
+      MYSQL_PASSWORD: example_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+networks:
+  wordpress_network:
+    driver: bridge
+
+volumes:
+  wordpress_data:
+  mysql_data:
